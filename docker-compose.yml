@@ -1,0 +1,53 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_URL=sqlite:///data/lab.db
+    networks:
+      - lab-network
+    restart: unless-stopped
+    # Security: Only bind to localhost
+    command: ["python", "app.py", "--host", "127.0.0.1"]
+    # Resource limits to prevent abuse
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # Optional MySQL container for more realistic training
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: lab_password
+      MYSQL_DATABASE: lab_db
+      MYSQL_USER: lab_user
+      MYSQL_PASSWORD: lab_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql_init:/docker-entrypoint-initdb.d
+    networks:
+      - lab-network
+    ports:
+      - "3306:3306"
+    profiles:
+      - mysql  # Only start with --profile mysql
+
+networks:
+  lab-network:
+    driver: bridge
+    # Isolate from external networks
+    internal: false
+
+volumes:
+  mysql_data:
+    driver: local

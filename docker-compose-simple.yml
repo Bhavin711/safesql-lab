@@ -1,0 +1,25 @@
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile.simple
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_URL=sqlite:///data/lab.db
+    restart: unless-stopped
+    # Security: Only bind to localhost
+    command: ["python", "app.py", "--host", "127.0.0.1"]
+    # Resource limits to prevent abuse
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
