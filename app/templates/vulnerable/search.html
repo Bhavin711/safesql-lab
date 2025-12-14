@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Vulnerable Search - SafeSQL-Lab{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="vulnerable-section">
+            <h2><i class="bi bi-bug text-danger"></i> Vulnerable Product Search</h2>
+            <p class="text-muted">This search form contains a SQL injection vulnerability for educational purposes.</p>
+            
+            <div class="alert alert-danger" role="alert">
+                <h5><i class="bi bi-exclamation-triangle"></i> Vulnerability Details</h5>
+                <p class="mb-0">
+                    This search form directly interpolates user input into SQL queries without proper sanitization, 
+                    allowing attackers to extract data from the database or manipulate query results.
+                </p>
+            </div>
+            
+            <form method="GET" action="{{ url_for('vulnerable.search') }}">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="q" placeholder="Search products..." 
+                           value="{{ query if query else '' }}">
+                    <button class="btn btn-danger" type="submit">
+                        <i class="bi bi-search"></i> Search (Vulnerable)
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if products %}
+<div class="row">
+    <div class="col-12">
+        <h4>Search Results ({{ products|length }} found)</h4>
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product[1] }}</h5>
+                        <p class="card-text">{{ product[2] }}</p>
+                        <p class="card-text">
+                            <strong>Price:</strong> ${{ "%.2f"|format(product[3]) }}
+                        </p>
+                        <a href="{{ url_for('vulnerable.item_detail', id=product[0]) }}" class="btn btn-primary btn-sm">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% elif query %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-info" role="alert">
+            <h5><i class="bi bi-info-circle"></i> No Results Found</h5>
+            <p class="mb-0">No products found matching your search criteria.</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row mt-4">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="bi bi-lightbulb"></i> Learning Hints</h6>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="hintsAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#hint1">
+                                Low Hint
+                            </button>
+                        </h2>
+                        <div id="hint1" class="accordion-collapse collapse" data-bs-parent="#hintsAccordion">
+                            <div class="accordion-body">
+                                Try using special characters like single quotes, semicolons, or comment symbols in your search.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#hint2">
+                                Medium Hint
+                            </button>
+                        </h2>
+                        <div id="hint2" class="accordion-collapse collapse" data-bs-parent="#hintsAccordion">
+                            <div class="accordion-body">
+                                Look for ways to extract information about the database structure using UNION SELECT statements.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#hint3">
+                                High Hint (Instructor Only)
+                            </button>
+                        </h2>
+                        <div id="hint3" class="accordion-collapse collapse" data-bs-parent="#hintsAccordion">
+                            <div class="accordion-body">
+                                <strong>Instructor Access Required:</strong> Use UNION SELECT to extract data from other tables like users or comments.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="bi bi-list-check"></i> What to Look For</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-check-circle text-success"></i> Error messages revealing database structure</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Unexpected search results</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Ability to extract data from other tables</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Information disclosure through error messages</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{{ url_for('secure.search') }}" class="btn btn-outline-success">
+                <i class="bi bi-shield-check"></i> View Secure Implementation
+            </a>
+            <a href="{{ url_for('exercises.exercise_detail', exercise_id='search_basic') }}" class="btn btn-outline-primary">
+                <i class="bi bi-book"></i> Exercise Details
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

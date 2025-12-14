@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Comment Form - SafeSQL-Lab{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="vulnerable-section">
+            <h2><i class="bi bi-bug text-danger"></i> Vulnerable Comment Form</h2>
+            <p class="text-muted">This comment form contains SQL injection vulnerabilities for educational purposes.</p>
+            
+            <div class="alert alert-danger" role="alert">
+                <h5><i class="bi bi-exclamation-triangle"></i> Vulnerability Details</h5>
+                <p class="mb-0">
+                    This form uses multiple parameters directly in SQL queries without proper sanitization, 
+                    allowing attackers to inject malicious SQL code through any of the form fields.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <form method="POST" action="{{ url_for('vulnerable.comment') }}">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Add a Comment</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="product_id" class="form-label">Product</label>
+                        <select class="form-select" id="product_id" name="product_id" required>
+                            <option value="">Select a product...</option>
+                            {% for product in products %}
+                            <option value="{{ product[0] }}">{{ product[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="author" class="form-label">Your Name</label>
+                        <input type="text" class="form-control" id="author" name="author" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Comment</label>
+                        <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-chat-dots"></i> Submit Comment (Vulnerable)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="bi bi-lightbulb"></i> Learning Hints</h6>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="hintsAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#hint1">
+                                Low Hint
+                            </button>
+                        </h2>
+                        <div id="hint1" class="accordion-collapse collapse" data-bs-parent="#hintsAccordion">
+                            <div class="accordion-body">
+                                Try using special characters like single quotes, semicolons, or comment symbols in the form fields.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#hint2">
+                                Medium Hint
+                            </button>
+                        </h2>
+                        <div id="hint2" class="accordion-collapse collapse" data-bs-parent="#hintsAccordion">
+                            <div class="accordion-body">
+                                Look for ways to modify the database structure or create new records using the form fields.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#hint3">
+                                High Hint (Instructor Only)
+                            </button>
+                        </h2>
+                        <div id="hint3" class="accordion-collapse collapse" data-bs-parent="#hintsAccordion">
+                            <div class="accordion-body">
+                                <strong>Instructor Access Required:</strong> Use payloads like <code>'; INSERT INTO users (username,password,role) VALUES ('hacker','password','admin');--</code> in the author field.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6><i class="bi bi-list-check"></i> What to Look For</h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-check-circle text-success"></i> Ability to inject through form fields</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Error messages revealing database structure</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Unexpected database modifications</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Ability to create or modify records</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{{ url_for('secure.comment') }}" class="btn btn-outline-success">
+                <i class="bi bi-shield-check"></i> View Secure Implementation
+            </a>
+            <a href="{{ url_for('exercises.exercise_detail', exercise_id='comment_form') }}" class="btn btn-outline-primary">
+                <i class="bi bi-book"></i> Exercise Details
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

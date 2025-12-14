@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Secure Examples - SafeSQL-Lab{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1><i class="bi bi-shield-check"></i> Secure Implementation Examples</h1>
+        <p class="lead">Learn how to properly implement secure code that prevents SQL injection vulnerabilities.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-info" role="alert">
+            <h5><i class="bi bi-info-circle"></i> About These Examples</h5>
+            <p class="mb-0">
+                These examples demonstrate secure coding practices that prevent SQL injection attacks. 
+                Compare them with the vulnerable implementations to understand the differences.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-success text-white">
+                <h5><i class="bi bi-shield-check"></i> Secure Login</h5>
+            </div>
+            <div class="card-body">
+                <p>Login form using parameterized queries to prevent SQL injection.</p>
+                
+                <h6>Key Security Features:</h6>
+                <ul>
+                    <li>SQLAlchemy ORM with parameterized queries</li>
+                    <li>Automatic input escaping</li>
+                    <li>Type safety and validation</li>
+                    <li>No string concatenation</li>
+                </ul>
+                
+                <div class="d-grid">
+                    <a href="{{ url_for('secure.login') }}" class="btn btn-success">
+                        <i class="bi bi-box-arrow-in-right"></i> Try Secure Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-success text-white">
+                <h5><i class="bi bi-shield-check"></i> Secure Search</h5>
+            </div>
+            <div class="card-body">
+                <p>Product search using secure query construction.</p>
+                
+                <h6>Key Security Features:</h6>
+                <ul>
+                    <li>ORM-based query construction</li>
+                    <li>Proper LIKE operator usage</li>
+                    <li>Automatic parameter binding</li>
+                    <li>Input validation and sanitization</li>
+                </ul>
+                
+                <div class="d-grid">
+                    <a href="{{ url_for('secure.search') }}" class="btn btn-success">
+                        <i class="bi bi-search"></i> Try Secure Search
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-success text-white">
+                <h5><i class="bi bi-shield-check"></i> Secure Item Detail</h5>
+            </div>
+            <div class="card-body">
+                <p>Item detail view with proper parameter validation.</p>
+                
+                <h6>Key Security Features:</h6>
+                <ul>
+                    <li>Type conversion and validation</li>
+                    <li>ORM-based data retrieval</li>
+                    <li>Proper error handling</li>
+                    <li>No direct SQL construction</li>
+                </ul>
+                
+                <div class="d-grid">
+                    <a href="{{ url_for('secure.item_detail', id=1) }}" class="btn btn-success">
+                        <i class="bi bi-eye"></i> Try Secure Item View
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-success text-white">
+                <h5><i class="bi bi-shield-check"></i> Secure Comment Form</h5>
+            </div>
+            <div class="card-body">
+                <p>Comment submission using secure data handling.</p>
+                
+                <h6>Key Security Features:</h6>
+                <ul>
+                    <li>ORM-based data insertion</li>
+                    <li>Input sanitization and validation</li>
+                    <li>Proper transaction handling</li>
+                    <li>Type safety and parameter binding</li>
+                </ul>
+                
+                <div class="d-grid">
+                    <a href="{{ url_for('secure.comment') }}" class="btn btn-success">
+                        <i class="bi bi-chat-dots"></i> Try Secure Comment Form
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-code-slash"></i> Code Comparison Examples</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-danger">Vulnerable Code:</h6>
+                        <pre class="vulnerable-code"><code># VULNERABLE: String concatenation
+query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+cursor.execute(query)</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Secure Code:</h6>
+                        <pre class="secure-code"><code># SECURE: Parameterized queries
+user = User.query.filter_by(
+    username=username, 
+    password=password
+).first()</code></pre>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h6 class="text-danger">Vulnerable Code:</h6>
+                        <pre class="vulnerable-code"><code># VULNERABLE: Direct interpolation
+sql_query = f"SELECT * FROM products WHERE name LIKE '%{query_param}%'"
+cursor.execute(sql_query)</code></pre>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-success">Secure Code:</h6>
+                        <pre class="secure-code"><code># SECURE: ORM with LIKE operator
+products = Product.query.filter(
+    Product.name.like(f'%{query_param}%')
+).all()</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-lightbulb"></i> Best Practices</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Input Validation:</h6>
+                        <ul>
+                            <li>Validate all input types and formats</li>
+                            <li>Use whitelist validation where possible</li>
+                            <li>Implement proper error handling</li>
+                            <li>Sanitize user input appropriately</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Database Security:</h6>
+                        <ul>
+                            <li>Use parameterized queries or ORM</li>
+                            <li>Implement principle of least privilege</li>
+                            <li>Use prepared statements</li>
+                            <li>Regular security updates and patches</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h6>Error Handling:</h6>
+                        <ul>
+                            <li>Don't expose database errors to users</li>
+                            <li>Log errors securely for debugging</li>
+                            <li>Implement consistent error responses</li>
+                            <li>Use proper HTTP status codes</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Monitoring:</h6>
+                        <ul>
+                            <li>Log all database queries</li>
+                            <li>Monitor for suspicious patterns</li>
+                            <li>Implement alerting for potential attacks</li>
+                            <li>Regular security testing and reviews</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-warning" role="alert">
+            <h5><i class="bi bi-exclamation-triangle"></i> Remember</h5>
+            <p class="mb-0">
+                Security is an ongoing process. Always stay updated with the latest security practices, 
+                regularly test your applications, and follow the principle of defense in depth.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

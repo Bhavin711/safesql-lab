@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Secure Login - SafeSQL-Lab{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="secure-section">
+            <h2><i class="bi bi-shield-check text-success"></i> Secure Login Form</h2>
+            <p class="text-muted">This login form uses secure coding practices to prevent SQL injection.</p>
+            
+            <div class="alert alert-success" role="alert">
+                <h5><i class="bi bi-shield-check"></i> Security Features</h5>
+                <p class="mb-0">
+                    This form uses parameterized queries (SQLAlchemy ORM) to prevent SQL injection attacks. 
+                    All user input is properly escaped and validated before database interaction.
+                </p>
+            </div>
+            
+            <form method="POST" action="{{ url_for('secure.login') }}">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-box-arrow-in-right"></i> Login (Secure)
+                    </button>
+                </div>
+            </form>
+            
+            <div class="mt-4">
+                <h6>Test Accounts:</h6>
+                <ul class="list-unstyled">
+                    <li><strong>admin</strong> / admin123</li>
+                    <li><strong>alice</strong> / password123</li>
+                    <li><strong>bob</strong> / secret456</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6><i class="bi bi-code-slash"></i> Secure Implementation</h6>
+                </div>
+                <div class="card-body">
+                    <h6>Python Code (SQLAlchemy ORM):</h6>
+                    <pre><code># SECURE: Using parameterized queries
+user = User.query.filter_by(
+    username=username, 
+    password=password
+).first()</code></pre>
+                    
+                    <h6 class="mt-3">Key Security Features:</h6>
+                    <ul>
+                        <li><strong>Parameterized Queries:</strong> SQLAlchemy automatically escapes all parameters</li>
+                        <li><strong>Type Safety:</strong> ORM provides type checking and validation</li>
+                        <li><strong>No String Concatenation:</strong> Eliminates SQL injection vectors</li>
+                        <li><strong>Input Validation:</strong> Built-in validation and sanitization</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <div class="d-grid gap-2">
+                <a href="{{ url_for('vulnerable.login') }}" class="btn btn-outline-danger">
+                    <i class="bi bi-bug"></i> Compare with Vulnerable Version
+                </a>
+                <a href="{{ url_for('exercises.exercise_detail', exercise_id='login_basic') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-book"></i> Exercise Details
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

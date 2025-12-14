@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Exercise Dashboard - SafeSQL-Lab{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1><i class="bi bi-list-check"></i> Exercise Dashboard</h1>
+        <p class="lead">Select an exercise to begin your SQL injection training journey.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-info" role="alert">
+            <h5><i class="bi bi-info-circle"></i> How to Use This Dashboard</h5>
+            <ul class="mb-0">
+                <li>Start with <strong>Easy</strong> exercises to understand basic concepts</li>
+                <li>Each exercise includes both vulnerable and secure implementations</li>
+                <li>Use the "Verify" button to check your progress</li>
+                <li>Compare vulnerable vs secure code to understand mitigation techniques</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    {% for exercise in exercises %}
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{ exercise.name }}</h5>
+                <span class="badge 
+                    {% if exercise.difficulty == 'Easy' %}bg-success
+                    {% elif exercise.difficulty == 'Medium' %}bg-warning
+                    {% else %}bg-danger
+                    {% endif %}">
+                    {{ exercise.difficulty }}
+                </span>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ exercise.description }}</p>
+                
+                <div class="mb-3">
+                    <h6>Learning Objectives:</h6>
+                    <ul class="list-unstyled">
+                        {% if exercise.id == 'login_basic' %}
+                            <li><i class="bi bi-check-circle text-success"></i> Understand login bypass techniques</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Learn string concatenation vulnerabilities</li>
+                        {% elif exercise.id == 'search_basic' %}
+                            <li><i class="bi bi-check-circle text-success"></i> Master parameter injection</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Practice UNION-based extraction</li>
+                        {% elif exercise.id == 'item_detail' %}
+                            <li><i class="bi bi-check-circle text-success"></i> Understand numeric parameter injection</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Learn stacked query techniques</li>
+                        {% elif exercise.id == 'comment_form' %}
+                            <li><i class="bi bi-check-circle text-success"></i> Master form-based injection</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Practice data manipulation</li>
+                        {% elif exercise.id == 'boolean_blind' %}
+                            <li><i class="bi bi-check-circle text-success"></i> Understand blind injection concepts</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Learn boolean-based inference</li>
+                        {% elif exercise.id == 'time_blind' %}
+                            <li><i class="bi bi-check-circle text-success"></i> Master time-based techniques</li>
+                            <li><i class="bi bi-check-circle text-success"></i> Practice advanced exploitation</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group w-100" role="group">
+                    <a href="{{ url_for('exercises.exercise_detail', exercise_id=exercise.id) }}" 
+                       class="btn btn-primary">
+                        <i class="bi bi-book"></i> Learn More
+                    </a>
+                    <a href="{{ exercise.endpoint }}" 
+                       class="btn btn-outline-danger">
+                        <i class="bi bi-bug"></i> Try Vulnerable
+                    </a>
+                    <a href="{{ exercise.endpoint.replace('/vulnerable', '/secure') }}" 
+                       class="btn btn-outline-success">
+                        <i class="bi bi-shield-check"></i> View Secure
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-lightbulb"></i> Tips for Success</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6><i class="bi bi-1-circle text-primary"></i> Start Simple</h6>
+                        <p>Begin with easy exercises to understand basic SQL injection concepts before moving to advanced techniques.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><i class="bi bi-2-circle text-primary"></i> Compare & Contrast</h6>
+                        <p>Always compare vulnerable implementations with their secure counterparts to understand proper mitigation.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6><i class="bi bi-3-circle text-primary"></i> Practice Safely</h6>
+                        <p>Remember: these techniques are for educational purposes only. Never test on systems you don't own.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-warning" role="alert">
+            <h5><i class="bi bi-exclamation-triangle"></i> Remember</h5>
+            <p class="mb-0">
+                This lab is designed for educational purposes only. The techniques demonstrated here should never be used 
+                against systems you do not own or lack explicit permission to test. Always follow responsible disclosure 
+                practices and applicable laws in your jurisdiction.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

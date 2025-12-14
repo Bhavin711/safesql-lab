@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}SafeSQL-Lab - Educational SQL Injection Training{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="jumbotron bg-primary text-white p-5 rounded mb-4">
+            <h1 class="display-4"><i class="bi bi-shield-exclamation"></i> SafeSQL-Lab</h1>
+            <p class="lead">Educational SQL Injection Training Platform</p>
+            <hr class="my-4">
+            <p>Learn to identify, exploit (in controlled environments), and mitigate SQL injection vulnerabilities through hands-on exercises.</p>
+            <a class="btn btn-light btn-lg" href="{{ url_for('main.legal_warning') }}" role="button">
+                <i class="bi bi-play-circle"></i> Start Training
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-book"></i> Learning Objectives</h5>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-check-circle text-success"></i> Recognize SQL injection vulnerabilities</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Understand exploitation techniques</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Learn proper mitigation strategies</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Practice secure coding patterns</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-shield-check"></i> Safety Features</h5>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-lock text-primary"></i> Localhost-only binding</li>
+                    <li><i class="bi bi-lock text-primary"></i> Docker isolation</li>
+                    <li><i class="bi bi-lock text-primary"></i> Legal acknowledgment required</li>
+                    <li><i class="bi bi-lock text-primary"></i> Comprehensive logging</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-graph-up"></i> Exercise Levels</h5>
+                <ul class="list-unstyled">
+                    <li><span class="badge bg-success">Easy</span> Basic injection techniques</li>
+                    <li><span class="badge bg-warning">Medium</span> Advanced exploitation</li>
+                    <li><span class="badge bg-danger">Hard</span> Blind injection methods</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading"><i class="bi bi-exclamation-triangle"></i> Important Legal Notice</h4>
+            <p>This application is designed <strong>exclusively for authorized, lawful, educational use</strong>. It must be run in an isolated environment and should never be deployed on the public internet.</p>
+            <hr>
+            <p class="mb-0">By using this application, you acknowledge that you have proper authorization to perform security testing and that you will not use these techniques against systems you do not own or lack explicit permission to test.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-list-check"></i> Quick Start Guide</h5>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li>Read and acknowledge the legal warning</li>
+                    <li>Start with easy exercises to understand basics</li>
+                    <li>Compare vulnerable vs secure implementations</li>
+                    <li>Progress through difficulty levels</li>
+                    <li>Review instructor materials (if authorized)</li>
+                </ol>
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">
+                    <i class="bi bi-arrow-right"></i> View Exercises
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-info-circle"></i> About This Lab</h5>
+            </div>
+            <div class="card-body">
+                <p>SafeSQL-Lab provides a controlled environment for learning SQL injection vulnerabilities. Each exercise includes:</p>
+                <ul>
+                    <li>Vulnerable implementations for practice</li>
+                    <li>Secure reference implementations</li>
+                    <li>Detailed explanations and hints</li>
+                    <li>Automated verification systems</li>
+                </ul>
+                <a href="{{ url_for('main.about') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-info-circle"></i> Learn More
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

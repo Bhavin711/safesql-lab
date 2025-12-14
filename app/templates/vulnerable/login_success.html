@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Login Successful - SafeSQL-Lab{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading"><i class="bi bi-check-circle"></i> Login Successful!</h4>
+            <p>You have successfully logged in to the vulnerable system.</p>
+            <hr>
+            <p class="mb-0">
+                <strong>User ID:</strong> {{ user[0] }}<br>
+                <strong>Username:</strong> {{ user[1] }}<br>
+                <strong>Role:</strong> {{ user[3] }}
+            </p>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-info-circle"></i> What Just Happened?</h5>
+            </div>
+            <div class="card-body">
+                <p>You successfully exploited a SQL injection vulnerability in the login form. This demonstrates how attackers can bypass authentication systems.</p>
+                
+                <h6>Key Points:</h6>
+                <ul>
+                    <li>The application used string concatenation to build SQL queries</li>
+                    <li>Your input was interpreted as SQL code, not just data</li>
+                    <li>This allowed you to bypass the password check</li>
+                    <li>In a real system, this could lead to unauthorized access</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <div class="d-grid gap-2">
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">
+                    <i class="bi bi-arrow-left"></i> Back to Exercises
+                </a>
+                <a href="{{ url_for('secure.login') }}" class="btn btn-outline-success">
+                    <i class="bi bi-shield-check"></i> View Secure Implementation
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

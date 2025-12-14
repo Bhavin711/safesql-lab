@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Legal Warning - SafeSQL-Lab{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h3 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Legal Warning & Terms of Use</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">⚠️ CRITICAL LEGAL NOTICE ⚠️</h4>
+                    <p class="mb-0">This application is designed <strong>EXCLUSIVELY for authorized, lawful, educational use</strong> in controlled, isolated environments.</p>
+                </div>
+
+                <h5>Terms and Conditions:</h5>
+                <div class="mb-4">
+                    <ol class="list-group list-group-numbered">
+                        <li class="list-group-item">
+                            <strong>Educational Use Only:</strong> This application is intended solely for security training, education, and authorized penetration testing in controlled environments.
+                        </li>
+                        <li class="list-group-item">
+                            <strong>No Public Deployment:</strong> This application must NEVER be deployed on the public internet or any publicly accessible network.
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Isolated Environment Required:</strong> This application must only be run on localhost, private VMs, or containers behind firewalls.
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Authorized Testing Only:</strong> You may only use these techniques against systems you own or have explicit written permission to test.
+                        </li>
+                        <li class="list-group-item">
+                            <strong>No Malicious Use:</strong> These techniques must never be used for unauthorized access, data theft, or any malicious purposes.
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Responsible Disclosure:</strong> Any vulnerabilities discovered in real systems must be reported through proper channels.
+                        </li>
+                    </ol>
+                </div>
+
+                <h5>Security Best Practices:</h5>
+                <div class="mb-4">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle text-success"></i> Always run in isolated environments
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle text-success"></i> Use strong network isolation
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle text-success"></i> Monitor all activities and logs
+                        </li>
+                        <li class="list-group-item">
+                            <i class="bi bi-check-circle text-success"></i> Keep instructor materials secure
+                        </li>
+                    </ul>
+                </div>
+
+                <h5>Legal Disclaimer:</h5>
+                <div class="alert alert-warning" role="alert">
+                    <p class="mb-0">
+                        The creators of this application are not responsible for any misuse of the techniques demonstrated. 
+                        Users are solely responsible for ensuring their use complies with all applicable laws and regulations. 
+                        Unauthorized testing of computer systems is illegal in most jurisdictions.
+                    </p>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="legalAgreement" required>
+                    <label class="form-check-label" for="legalAgreement">
+                        <strong>I acknowledge that I have read, understood, and agree to comply with all terms and conditions outlined above.</strong>
+                    </label>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="authorizedUse" required>
+                    <label class="form-check-label" for="authorizedUse">
+                        <strong>I confirm that I have proper authorization to perform security testing and will only use these techniques in authorized, controlled environments.</strong>
+                    </label>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="isolatedEnvironment" required>
+                    <label class="form-check-label" for="isolatedEnvironment">
+                        <strong>I confirm that I will only run this application in an isolated environment (localhost, private VM, or container) and will not deploy it on any public network.</strong>
+                    </label>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-success btn-lg" id="acknowledgeBtn" disabled>
+                        <i class="bi bi-shield-check"></i> I Understand and Agree
+                    </button>
+                    <a href="{{ url_for('main.index') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Return to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const acknowledgeBtn = document.getElementById('acknowledgeBtn');
+    
+    function checkAllChecked() {
+        const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+        acknowledgeBtn.disabled = !allChecked;
+    }
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', checkAllChecked);
+    });
+    
+    acknowledgeBtn.addEventListener('click', function() {
+        // Send acknowledgment to server
+        fetch('{{ url_for("main.acknowledge_warning") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'acknowledged') {
+                // Redirect to dashboard
+                window.location.href = '{{ url_for("main.dashboard") }}';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error acknowledging terms. Please try again.');
+        });
+    });
+});
+</script>
+{% endblock %}
